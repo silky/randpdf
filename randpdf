@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Change 10k as appropriate.
+
+INPUT_DIR=~/research/library
+OUTPUT_FILE=~/randompdf.pdf
+FILENAME=$(ls $INPUT_DIR | grep ".pdf$" | while read FILE
+        do
+            echo "`expr $RANDOM % 10000`:$FILE"
+        done | sort -n| sed 's/[0-9]*://' | head -1)
+
+# Delete the file if it exists
+if [ -f ${OUTPUT_FILE} ]
+then
+    rm ${OUTPUT_FILE}
+fi
+
+# Copy it to dropbox and create a symlink in the home dir.
+
+if [ "$1" != "--no-db" ]
+then
+    cp "${INPUT_DIR}/${FILENAME}" ~/Dropbox/research/
+fi
+
+ln -s "${INPUT_DIR}/${FILENAME}" ${OUTPUT_FILE}
